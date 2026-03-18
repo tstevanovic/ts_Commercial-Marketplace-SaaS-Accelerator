@@ -27,7 +27,7 @@
         <!-- Branded navbar -->
         <nav class="brand-navbar">
             <a class="brand-logo" href="@Url.Action("Index", "Home")">
-                <img src="~@(ViewData["BrandLogo"])" alt="@(ViewData["BrandName"])" />
+                <img src="@Url.Content("~" + ViewData["BrandLogo"])" alt="@(ViewData["BrandName"])" />
             </a>
             <div class="nav-user">
                 @if (this.User.Identity.IsAuthenticated)
