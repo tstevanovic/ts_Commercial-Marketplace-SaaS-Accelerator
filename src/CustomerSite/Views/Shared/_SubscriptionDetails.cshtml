@@ -22,13 +22,9 @@
         _ => "status-pending"
     };
 
-    // Plan display name: prefer marketplace DisplayName, fallback to title-cased PlanId
-    string planDisplayName = ViewData["PlanDisplayName"] as string;
+    // Plan display name and description from Marketplace API (set in HomeController)
+    string friendlyPlan = (ViewData["PlanDisplayName"] as string) ?? Model.PlanId;
     string planDescription = ViewData["PlanDescription"] as string;
-    string friendlyPlan = !string.IsNullOrEmpty(planDisplayName)
-        ? planDisplayName
-        : System.Globalization.CultureInfo.CurrentCulture.TextInfo
-            .ToTitleCase((Model.PlanId ?? "").Replace("-", " ").Replace("_", " "));
 
     bool isBranded = ViewData["Brand"] != null && ViewData["Brand"].ToString() != "default";
 }
