@@ -202,6 +202,60 @@ public class HomeController : BaseController
     }
 
     /// <summary>
+    /// Detects the brand from the offer ID and sets ViewData for layout rendering.
+    /// </summary>
+    private string DetectAndSetBrand(string offerId)
+    {
+        string brand = "default";
+        if (!string.IsNullOrEmpty(offerId))
+        {
+            if (offerId.Contains("auralytik", StringComparison.OrdinalIgnoreCase))
+                brand = "auralytik";
+            else if (offerId.Contains("ai-erp", StringComparison.OrdinalIgnoreCase))
+                brand = "synaptik";
+        }
+
+        ViewData["Brand"] = brand;
+
+        switch (brand)
+        {
+            case "auralytik":
+                ViewData["BrandName"] = "Auralytik";
+                ViewData["BrandColor"] = "#F97316";
+                ViewData["BrandLogo"] = "/logos/auralytik-logo-light.svg";
+                ViewData["BrandUrl"] = "https://auralytik.com";
+                break;
+            case "synaptik":
+                ViewData["BrandName"] = "Synaptik";
+                ViewData["BrandColor"] = "#60A5FA";
+                ViewData["BrandLogo"] = "/logos/synaptik-logo-light.svg";
+                ViewData["BrandUrl"] = "https://synaptiktech.com";
+                break;
+            default:
+                ViewData["BrandName"] = "Marketplace";
+                ViewData["BrandColor"] = "#004578";
+                ViewData["BrandLogo"] = "/contoso-sales.png";
+                ViewData["BrandUrl"] = "#";
+                break;
+        }
+
+        return brand;
+    }
+
+    /// <summary>
+    /// Returns the appropriate view based on brand detection.
+    /// </summary>
+    private IActionResult BrandedView(string brand, SubscriptionResultExtension model)
+    {
+        if (brand != "default")
+        {
+            var brandFolder = char.ToUpper(brand[0]) + brand.Substring(1);
+            return this.View($"~/Views/Brands/{brandFolder}/_LandingPage.cshtml", model);
+        }
+        return this.View(model);
+    }
+
+    /// <summary>
     /// Get All Subscription List for Current Logged in User.
     /// </summary>
     /// <param name="token">The MS Token<see cref="string" />..</param>
@@ -301,7 +355,8 @@ public class HomeController : BaseController
                 }
             }
 
-            return this.View(subscriptionExtension);
+            var brand = this.DetectAndSetBrand(subscriptionExtension.OfferId);
+            return this.BrandedView(brand, subscriptionExtension);
         }
         catch (Exception ex)
         {

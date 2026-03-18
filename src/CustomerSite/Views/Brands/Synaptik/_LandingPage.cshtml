@@ -1,0 +1,125 @@
+@using Marketplace.SaaS.Accelerator.Services.Models
+@model Marketplace.SaaS.Accelerator.Services.Models.SubscriptionResultExtension
+
+@{
+    ViewData["Title"] = "Synaptik — Subscription";
+}
+
+@if (!Model.ShowWelcomeScreen)
+{
+    <div class="brand-hero">
+        <div class="hero-icon">
+            <svg width="80" height="80" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="20" width="4" height="7" rx="1" fill="#60A5FA" opacity="0.2" stroke="#60A5FA" stroke-width="1.2"/>
+                <rect x="11" y="15" width="4" height="12" rx="1" fill="#60A5FA" opacity="0.3" stroke="#60A5FA" stroke-width="1.2"/>
+                <rect x="17" y="11" width="4" height="16" rx="1" fill="#60A5FA" opacity="0.4" stroke="#60A5FA" stroke-width="1.2"/>
+                <rect x="23" y="7" width="4" height="20" rx="1" fill="#60A5FA" opacity="0.5" stroke="#60A5FA" stroke-width="1.2"/>
+                <path d="M7 19 L13 14 L19 10 L25 6" stroke="#60A5FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="25" cy="6" r="2" fill="#60A5FA" opacity="0.8"/>
+            </svg>
+        </div>
+        <h1>AI-Native ERP for Operational Intelligence</h1>
+        <p class="hero-subtitle">Your Operations. Thinking.</p>
+    </div>
+
+    <div class="value-props">
+        <div class="value-card">
+            <div class="card-icon">&#x1F4B0;</div>
+            <h3>Financial Management</h3>
+            <p>Unified accounting, invoicing, and financial reporting powered by intelligent automation.</p>
+        </div>
+        <div class="value-card">
+            <div class="card-icon">&#x1F4E6;</div>
+            <h3>Inventory &amp; Operations</h3>
+            <p>Real-time stock tracking, workflow management, and operational efficiency at scale.</p>
+        </div>
+        <div class="value-card">
+            <div class="card-icon">&#x1F9E0;</div>
+            <h3>AI-Powered Insights</h3>
+            <p>Intelligent forecasting, anomaly detection, and data-driven decision support.</p>
+        </div>
+    </div>
+
+    <div class="subscription-section">
+        <form method="post" id="frmIndex">
+            @if (Model != null && !string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="brand-error">
+                    <strong>Error!</strong> Something went wrong during the operation.
+                </div>
+            }
+            else
+            {
+                <div class="subscription-card">
+                    <div class="card-header">
+                        <div class="accent-bar"></div>
+                        <h2>Subscription Details</h2>
+                    </div>
+                    <div class="card-body">
+                        @await Html.PartialAsync("_SubscriptionDetails", Model)
+                    </div>
+                    <div class="cta-section">
+                        @if (Model.SubscriptionStatus == SubscriptionStatusEnumExtension.Subscribed)
+                        {
+                            <button type="submit" asp-action="SubscriptionOperation" asp-route-subscriptionId="@Model.Id" asp-route-planId="@Model.PlanId" asp-route-operation="Deactivate" class="btn-brand-danger">Unsubscribe</button>
+                            <button type="submit" asp-action="Subscriptions" class="btn-brand-secondary">Go to Subscriptions</button>
+                        }
+                        @if (Model.SubscriptionStatus == SubscriptionStatusEnumExtension.PendingFulfillmentStart && Model.IsAutomaticProvisioningSupported == true)
+                        {
+                            <a onclick="SubscriptionOperation('@Model.Id','@Model.PlanId','Activate')" id="btnActive" class="btn-brand-primary">Activate</a>
+                        }
+                        @if (Model.SubscriptionStatus == SubscriptionStatusEnumExtension.PendingFulfillmentStart && Model.IsAutomaticProvisioningSupported == false)
+                        {
+                            <a onclick="SubscriptionOperation('@Model.Id','@Model.PlanId','Activate')" id="btnActive" class="btn-brand-primary" style="text-decoration:none;">Subscribe</a>
+                        }
+                    </div>
+                </div>
+            }
+        </form>
+    </div>
+}
+else
+{
+    <div class="brand-welcome">
+        <div class="hero-icon" style="margin-bottom:1.5rem;">
+            <svg width="64" height="64" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="20" width="4" height="7" rx="1" fill="#60A5FA" opacity="0.2" stroke="#60A5FA" stroke-width="1.2"/>
+                <rect x="11" y="15" width="4" height="12" rx="1" fill="#60A5FA" opacity="0.3" stroke="#60A5FA" stroke-width="1.2"/>
+                <rect x="17" y="11" width="4" height="16" rx="1" fill="#60A5FA" opacity="0.4" stroke="#60A5FA" stroke-width="1.2"/>
+                <rect x="23" y="7" width="4" height="20" rx="1" fill="#60A5FA" opacity="0.5" stroke="#60A5FA" stroke-width="1.2"/>
+                <path d="M7 19 L13 14 L19 10 L25 6" stroke="#60A5FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="25" cy="6" r="2" fill="#60A5FA" opacity="0.8"/>
+            </svg>
+        </div>
+        <h1>Welcome to Synaptik</h1>
+        <p>To subscribe, search for <b>Synaptik</b> in the <b>Azure Marketplace</b>, select a plan, and click <b>Configure Account</b> to get started.</p>
+    </div>
+}
+
+<script type="text/javascript">
+    function SubscriptionOperation(subscriptionId, planId, operation) {
+        if (validate()) {
+            var formobject = $('#frmIndex').serialize();
+            var csrftoken = $('input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                url: '/Home/SubscriptionOperation',
+                type: 'POST',
+                headers: { RequestVerificationToken: csrftoken },
+                data: formobject + "&subscriptionId=" + subscriptionId + "&planId=" + planId + "&operation=" + operation,
+                cache: false,
+                success: function (result) { $('#divIndex').html(result); },
+                error: function (result) { $('#divIndex').html(result); }
+            });
+        } else {
+            swal({ title: "Required", text: "Please fill all required values", icon: "warning" });
+        }
+    }
+
+    function validate() {
+        var valid = true;
+        $(':input[required]:visible').each(function () {
+            if ($(this).val() == "") return valid = false;
+        });
+        return valid;
+    }
+</script>

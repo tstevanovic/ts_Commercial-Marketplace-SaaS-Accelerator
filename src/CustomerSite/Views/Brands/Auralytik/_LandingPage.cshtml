@@ -1,0 +1,119 @@
+@using Marketplace.SaaS.Accelerator.Services.Models
+@model Marketplace.SaaS.Accelerator.Services.Models.SubscriptionResultExtension
+
+@{
+    ViewData["Title"] = "Auralytik — Subscription";
+}
+
+@if (!Model.ShowWelcomeScreen)
+{
+    <div class="brand-hero">
+        <div class="hero-icon">
+            <svg width="80" height="80" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 16h3l2-6 3 12 3-9 2.5 5 2.5-3 2 7 2.5-8 2 2h3" stroke="#F97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M25 10.5a8 8 0 0 1 0 11" stroke="#F97316" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                <path d="M27.5 8a11 11 0 0 1 0 16" stroke="#F97316" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+            </svg>
+        </div>
+        <h1>AI-Powered Conversation Analytics</h1>
+        <p class="hero-subtitle">Transform every customer interaction into actionable intelligence.</p>
+    </div>
+
+    <div class="value-props">
+        <div class="value-card">
+            <div class="card-icon">&#x1F50A;</div>
+            <h3>Real-Time Analysis</h3>
+            <p>Monitor and analyze live conversations across all your channels with AI-driven insights.</p>
+        </div>
+        <div class="value-card">
+            <div class="card-icon">&#x1F310;</div>
+            <h3>Multi-Channel Intelligence</h3>
+            <p>Unify WhatsApp, IVR, and voice channels into a single analytics platform.</p>
+        </div>
+        <div class="value-card">
+            <div class="card-icon">&#x2705;</div>
+            <h3>Compliance &amp; Quality</h3>
+            <p>Automated auditing and scoring to ensure every interaction meets your standards.</p>
+        </div>
+    </div>
+
+    <div class="subscription-section">
+        <form method="post" id="frmIndex">
+            @if (Model != null && !string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="brand-error">
+                    <strong>Error!</strong> Something went wrong during the operation.
+                </div>
+            }
+            else
+            {
+                <div class="subscription-card">
+                    <div class="card-header">
+                        <div class="accent-bar"></div>
+                        <h2>Subscription Details</h2>
+                    </div>
+                    <div class="card-body">
+                        @await Html.PartialAsync("_SubscriptionDetails", Model)
+                    </div>
+                    <div class="cta-section">
+                        @if (Model.SubscriptionStatus == SubscriptionStatusEnumExtension.Subscribed)
+                        {
+                            <button type="submit" asp-action="SubscriptionOperation" asp-route-subscriptionId="@Model.Id" asp-route-planId="@Model.PlanId" asp-route-operation="Deactivate" class="btn-brand-danger">Unsubscribe</button>
+                            <button type="submit" asp-action="Subscriptions" class="btn-brand-secondary">Go to Subscriptions</button>
+                        }
+                        @if (Model.SubscriptionStatus == SubscriptionStatusEnumExtension.PendingFulfillmentStart && Model.IsAutomaticProvisioningSupported == true)
+                        {
+                            <a onclick="SubscriptionOperation('@Model.Id','@Model.PlanId','Activate')" id="btnActive" class="btn-brand-primary">Activate</a>
+                        }
+                        @if (Model.SubscriptionStatus == SubscriptionStatusEnumExtension.PendingFulfillmentStart && Model.IsAutomaticProvisioningSupported == false)
+                        {
+                            <a onclick="SubscriptionOperation('@Model.Id','@Model.PlanId','Activate')" id="btnActive" class="btn-brand-primary" style="text-decoration:none;">Subscribe</a>
+                        }
+                    </div>
+                </div>
+            }
+        </form>
+    </div>
+}
+else
+{
+    <div class="brand-welcome">
+        <div class="hero-icon" style="margin-bottom:1.5rem;">
+            <svg width="64" height="64" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 16h3l2-6 3 12 3-9 2.5 5 2.5-3 2 7 2.5-8 2 2h3" stroke="#F97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M25 10.5a8 8 0 0 1 0 11" stroke="#F97316" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                <path d="M27.5 8a11 11 0 0 1 0 16" stroke="#F97316" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+            </svg>
+        </div>
+        <h1>Welcome to Auralytik</h1>
+        <p>To subscribe, search for <b>Auralytik</b> in the <b>Azure Marketplace</b>, select a plan, and click <b>Configure Account</b> to get started.</p>
+    </div>
+}
+
+<script type="text/javascript">
+    function SubscriptionOperation(subscriptionId, planId, operation) {
+        if (validate()) {
+            var formobject = $('#frmIndex').serialize();
+            var csrftoken = $('input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                url: '/Home/SubscriptionOperation',
+                type: 'POST',
+                headers: { RequestVerificationToken: csrftoken },
+                data: formobject + "&subscriptionId=" + subscriptionId + "&planId=" + planId + "&operation=" + operation,
+                cache: false,
+                success: function (result) { $('#divIndex').html(result); },
+                error: function (result) { $('#divIndex').html(result); }
+            });
+        } else {
+            swal({ title: "Required", text: "Please fill all required values", icon: "warning" });
+        }
+    }
+
+    function validate() {
+        var valid = true;
+        $(':input[required]:visible').each(function () {
+            if ($(this).val() == "") return valid = false;
+        });
+        return valid;
+    }
+</script>

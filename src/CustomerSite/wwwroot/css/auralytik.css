@@ -1,0 +1,7 @@
+/* Auralytik brand theme — orange #F97316 */
+:root {
+    --brand-primary: #F97316;
+    --brand-primary-light: rgba(249, 115, 22, 0.1);
+    --brand-hero-from: #0f172a;
+    --brand-hero-to: #1e293b;
+}

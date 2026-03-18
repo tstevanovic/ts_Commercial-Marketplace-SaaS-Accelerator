@@ -1,0 +1,7 @@
+/* Synaptik brand theme — blue #60A5FA */
+:root {
+    --brand-primary: #60A5FA;
+    --brand-primary-light: rgba(96, 165, 250, 0.1);
+    --brand-hero-from: #0f172a;
+    --brand-hero-to: #1e3a5f;
+}

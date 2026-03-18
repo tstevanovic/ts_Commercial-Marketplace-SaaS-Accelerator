@@ -1,0 +1,342 @@
+/* Brand-shared styles for marketing landing pages */
+/* Used by both Auralytik and Synaptik branded pages */
+/* Brand-specific colors come from CSS variables set in auralytik.css / synaptik.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.brand-page {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: #0f172a;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+/* ── Navbar ── */
+.brand-navbar {
+    background: #0f172a;
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 56px;
+}
+
+.brand-navbar .brand-logo img {
+    height: 36px;
+    width: auto;
+}
+
+.brand-navbar .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.brand-navbar .nav-user a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.brand-navbar .nav-user a:hover {
+    color: #ffffff;
+}
+
+/* ── Hero Section ── */
+.brand-hero {
+    background: linear-gradient(135deg, var(--brand-hero-from, #0f172a), var(--brand-hero-to, #1e293b));
+    padding: 7rem 2rem 4rem;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.brand-hero .hero-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    opacity: 0.9;
+}
+
+.brand-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.brand-hero .hero-subtitle {
+    font-size: 1.15rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 300;
+    max-width: 550px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Decorative gradient line below hero */
+.brand-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--brand-primary, #F97316), transparent);
+}
+
+/* ── Value Props ── */
+.value-props {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 960px;
+    margin: -2rem auto 3rem;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.value-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.value-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.value-card .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--brand-primary-light, rgba(249, 115, 22, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+}
+
+.value-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #0f172a;
+}
+
+.value-card p {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* ── Subscription Card ── */
+.subscription-section {
+    max-width: 720px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+}
+
+.subscription-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.subscription-card .card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.subscription-card .card-header h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+}
+
+.subscription-card .card-header .accent-bar {
+    width: 4px;
+    height: 24px;
+    border-radius: 2px;
+    background: var(--brand-primary, #F97316);
+}
+
+.subscription-card .card-body {
+    padding: 1.5rem;
+}
+
+.subscription-card .card-body dl {
+    margin: 0;
+}
+
+.subscription-card .card-body dt {
+    font-weight: 600;
+    color: #334155;
+    font-size: 0.875rem;
+}
+
+.subscription-card .card-body dd {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+/* ── CTA Buttons ── */
+.cta-section {
+    text-align: center;
+    padding: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn-brand-primary {
+    display: inline-block;
+    background: var(--brand-primary, #F97316);
+    color: white !important;
+    padding: 0.875rem 2.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-brand-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-brand-secondary {
+    display: inline-block;
+    background: transparent;
+    color: #64748b !important;
+    padding: 0.875rem 2.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    text-decoration: none;
+    margin-left: 0.75rem;
+    transition: border-color 0.2s;
+}
+
+.btn-brand-secondary:hover {
+    border-color: #94a3b8;
+}
+
+.btn-brand-danger {
+    display: inline-block;
+    background: #ef4444;
+    color: white !important;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.btn-brand-danger:hover {
+    opacity: 0.9;
+}
+
+/* ── Footer ── */
+.brand-footer {
+    text-align: center;
+    padding: 2rem;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.brand-footer a {
+    color: var(--brand-primary, #F97316);
+    text-decoration: none;
+}
+
+.brand-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ── Welcome Screen (no token) ── */
+.brand-welcome {
+    max-width: 600px;
+    margin: 8rem auto 4rem;
+    padding: 3rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+    text-align: center;
+}
+
+.brand-welcome h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.brand-welcome p {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* ── Error State ── */
+.brand-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    color: #dc2626;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .value-props {
+        grid-template-columns: 1fr;
+        margin-top: -1rem;
+    }
+
+    .brand-hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .brand-hero {
+        padding: 6rem 1.5rem 3rem;
+    }
+
+    .subscription-section {
+        padding: 0 1rem;
+    }
+}
