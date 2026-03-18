@@ -355,6 +355,17 @@ public class HomeController : BaseController
                 }
             }
 
+            // Pass plan display details to the view
+            if (!string.IsNullOrEmpty(subscriptionExtension.PlanId))
+            {
+                var plan = this.planRepository.GetById(subscriptionExtension.PlanId);
+                if (plan != null)
+                {
+                    ViewData["PlanDisplayName"] = plan.DisplayName;
+                    ViewData["PlanDescription"] = plan.Description;
+                }
+            }
+
             var brand = this.DetectAndSetBrand(subscriptionExtension.OfferId);
             return this.BrandedView(brand, subscriptionExtension);
         }

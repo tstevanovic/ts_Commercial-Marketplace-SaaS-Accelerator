@@ -378,6 +378,13 @@ body.brand-page {
     color: var(--brand-primary, #F97316);
 }
 
+.sub-detail-item .plan-description {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.4;
+    margin-top: 0.15rem;
+}
+
 .status-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
