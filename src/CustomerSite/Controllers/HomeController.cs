@@ -547,10 +547,23 @@ public class HomeController : BaseController
     /// <returns>
     /// Return View.
     /// </returns>
-    public IActionResult ProcessMessage(string action, string status)
+    public IActionResult ProcessMessage(string action, string status, string offerId = null)
     {
         try
         {
+            // Detect brand from offer ID and serve branded confirmation page
+            if (!string.IsNullOrEmpty(offerId))
+            {
+                var brand = this.DetectAndSetBrand(offerId);
+                if (brand != "default")
+                {
+                    var brandFolder = char.ToUpper(brand[0]) + brand.Substring(1);
+                    ViewData["Action"] = action;
+                    ViewData["Status"] = status;
+                    return this.View($"~/Views/Brands/{brandFolder}/ProcessMessage.cshtml");
+                }
+            }
+
             if (status.Equals("Activate"))
             {
                 return this.PartialView();
@@ -630,11 +643,13 @@ public class HomeController : BaseController
             try
             {
                 var userDetails = this.userRepository.GetPartnerDetailFromEmail(this.CurrentUserEmailAddress);
+                string resolvedOfferId = null;
 
                 if (subscriptionId != default)
                 {
                     this.logger.Info("GetPartnerSubscription");
                     var oldValue = this.subscriptionService.GetPartnerSubscription(this.CurrentUserEmailAddress, subscriptionId, true).FirstOrDefault();
+                    resolvedOfferId = oldValue?.OfferId;
                     if (oldValue == null)
                     {
                         this.logger.LogError($"Cannot find subscription or subscription associated to the current user");
@@ -717,7 +732,7 @@ public class HomeController : BaseController
 
                 this.notificationStatusHandlers.Process(subscriptionId);
 
-                return this.RedirectToAction(nameof(this.ProcessMessage), new { action = operation, status = operation });
+                return this.RedirectToAction(nameof(this.ProcessMessage), new { action = operation, status = operation, offerId = resolvedOfferId });
             }
             catch (Exception ex)
             {

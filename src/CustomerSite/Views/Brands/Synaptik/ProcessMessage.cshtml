@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Synaptik — Subscription Activated";
+    var action = ViewData["Action"]?.ToString() ?? "";
+    var status = ViewData["Status"]?.ToString() ?? "";
+    var appUrl = "https://app.synaptiktech.com";
+    var isActivation = status.Equals("Activate", StringComparison.OrdinalIgnoreCase);
+}
+
+<div class="brand-hero" style="padding-bottom: 2rem;">
+    <div class="hero-icon">
+        <svg width="80" height="80" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="3" fill="#60A5FA"/>
+            <circle cx="8" cy="10" r="2" fill="#60A5FA" opacity="0.7"/>
+            <circle cx="24" cy="10" r="2" fill="#60A5FA" opacity="0.7"/>
+            <circle cx="8" cy="22" r="2" fill="#60A5FA" opacity="0.7"/>
+            <circle cx="24" cy="22" r="2" fill="#60A5FA" opacity="0.7"/>
+            <line x1="13.5" y1="14.5" x2="9.5" y2="11.5" stroke="#60A5FA" stroke-width="1" opacity="0.5"/>
+            <line x1="18.5" y1="14.5" x2="22.5" y2="11.5" stroke="#60A5FA" stroke-width="1" opacity="0.5"/>
+            <line x1="13.5" y1="17.5" x2="9.5" y2="20.5" stroke="#60A5FA" stroke-width="1" opacity="0.5"/>
+            <line x1="18.5" y1="17.5" x2="22.5" y2="20.5" stroke="#60A5FA" stroke-width="1" opacity="0.5"/>
+        </svg>
+    </div>
+
+    @if (isActivation)
+    {
+        <h1>Your subscription is now active!</h1>
+        <p class="hero-subtitle">Welcome to Synaptik. Your account is being set up — you'll be redirected shortly.</p>
+    }
+    else
+    {
+        <h1>Request Processed</h1>
+        <p class="hero-subtitle">Your subscription change has been processed successfully.</p>
+    }
+</div>
+
+<div style="max-width: 480px; margin: -2rem auto 4rem; padding: 2.5rem; background: white; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center;">
+    @if (isActivation)
+    {
+        <div style="width: 64px; height: 64px; background: #eff6ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2rem;">
+            &#x2705;
+        </div>
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">You're all set!</h2>
+        <p style="color: #64748b; margin-bottom: 2rem; line-height: 1.6;">
+            Click the button below to start using Synaptik, or wait a few seconds to be redirected automatically.
+        </p>
+        <a href="@appUrl" class="btn-brand-primary" style="padding: 0.875rem 2.5rem; font-size: 1.1rem;">
+            Go to Synaptik
+        </a>
+        <p id="countdown-text" style="color: #94a3b8; font-size: 0.85rem; margin-top: 1.25rem;">
+            Redirecting in <span id="countdown">5</span> seconds...
+        </p>
+    }
+    else
+    {
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">Done!</h2>
+        <p style="color: #64748b; margin-bottom: 2rem; line-height: 1.6;">
+            Your request has been processed. You can return to the app or view your subscriptions.
+        </p>
+        <a href="@appUrl" class="btn-brand-primary" style="padding: 0.875rem 2rem;">
+            Go to Synaptik
+        </a>
+        <form method="post" style="display: inline-block; margin-left: 0.75rem;">
+            <button type="submit" asp-action="Subscriptions" class="btn-brand-secondary">View Subscriptions</button>
+        </form>
+    }
+</div>
+
+@if (isActivation)
+{
+    <script type="text/javascript">
+        (function () {
+            var seconds = 5;
+            var countdownEl = document.getElementById('countdown');
+            var timer = setInterval(function () {
+                seconds--;
+                if (countdownEl) countdownEl.textContent = seconds;
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    window.location.href = '@appUrl';
+                }
+            }, 1000);
+        })();
+    </script>
+}
